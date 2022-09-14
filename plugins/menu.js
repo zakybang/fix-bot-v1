@@ -223,7 +223,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname, args }) => {
 	    {title: `📔 ${pmenus} SCRIPT BOT`, rowId: ".sc", description: `Source Code ${namebot}`},
 	]
     },{
-	title: `${htki} SUPPORT ${htka}`,
+	title: `${htki} SUPPORT ZBOT ${htka}`,
 	rows: [
 	    {title: `🔖 ${pmenus} SEWA`, rowId: ".sewa", description: "Menampilkan list harga sewa BOT"},
 	    {title: `🌟 ${pmenus} BUY PREMIUM`, rowId: ".premium", description: "Menampilkan list harga premium"},
@@ -498,12 +498,12 @@ const listMessage = {
             fileLength: fsizedoc,
             pageCount: fpagedoc,
             caption: text,
-            footer: titlebot + '\n By Wh-Mods-Dev',
+            footer: titlebot + '\n By ZAkY',
             templateButtons: [
                 {
                     urlButton: {
                         displayText: `SUBSCRIBE`,
-                        url: 'https://www.youtube.com/channel/UCMx4e8anOq_Olt2nMSv0Cow'
+                        url: 'https://youtube.com/channel/UCgnsm5vkY2wlRJnpD9I-7SQ'
                     }
                 },
                 {
