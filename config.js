@@ -69,8 +69,8 @@ global.nameown = 'zaky'
 global.owner = [
   ['6281269883200'],
   ['6281365255567'],
-  ['6281365255567', 'Zaky', 'Creator Bot', 'Zaky@support.com', true],
-  ['6281269883200', 'ZBotz-MD', 'Bot WhatsApp', 'Just Bot', true]
+  ['6281365255567'],
+  ['6281269883200', 'ZBotz-MD', true]
   // [number, dia creator/owner?, dia developer?]
 ] // Put your number here
 global.mods = [] // Want some help?
