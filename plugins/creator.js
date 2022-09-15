@@ -8,48 +8,34 @@ let handler  = async (m, { conn, command, args, usedPrefix, DevMode }) => {
   let nowner = `${nomorown.split`@`[0]}@s.whatsapp.net`
   let teksnomor = `${htki} *OWNER* ${htka}
 • @${nomorown.split`@`[0]} •
-––––═┅═━ ${nameown} ═┅═━––––
+------- ${nameown} -------
 
 📮 *Note:*
-⪧ Owner tidak menerima save contact
-⪧ Owner berhak blockir tanpa alasan
-⪧ Berbicaralah yang sopan & tidak spam
-⪧ Owner Hanya merespon yang berkaitan dengan BOT
-⪧ No Telp
-⪧ Chat gajelas = Block`
+• Owner tidak menerima save contact
+• Owner berhak blockir tanpa alasan
+• Berbicaralah yang sopan & tidak spam
+• Owner Hanya merespon yang berkaitan dengan BOT
+• No Telp`
 
 //------------ BIO
 let ppown = await conn.profilePictureUrl(nomorown + '@s.whatsapp.net', 'image').catch(_ => hwaifu[1]) 
 let teksbio = `${htki} *BIODATA* ${htka}
-*💌 Nama* : ZakY
-*✉️ Nama RL* : Ah Ah
-*♂️ Gender* : Laki - laki
-*🕋 Agama* : Islam
-*⏰ Tanggal lahir* : 28 Januari 2006
-*🎨 Umur* : 17
-*🧮 Kelas* : 9
-*🧩 Hobby* : Nonton henta*, main game, Recode script
-*💬 Sifat* : Baik, hode, softboy, tydack ramah
-*🗺️ Tinggal* : Indonesia, Pekanbaru, Riau 
-*❤️ Suka* : warnah pink & hitam, trap, waifu wangy, kucing
-*💔 Benci* : anak alay, autis, anak ml, sok asik
+*ɴᴀᴍᴇ:* zaky
+*ᴀɢᴇ:* 17ᵗʰ
+*sᴛᴀᴛᴜs:* single 
+
+*ʙɪʀᴛʜᴅᴀʏ:* 21 Des 2006
+*ᴀᴅᴅʀᴇss:* Indonesia, Pekanbaru, Riau 
 
 *- - sᴋɪʟʟs: - -* 
-> JavaScript [70.7%]
-> Python [11.4%]
-> CSS [4.1%]
-> Html [0.9%]
-> Recode [76.8%]
-> Create Webs [88.9%]
-
-───────[ SOSIAL MEDIA ]───────
+> JavaScript [89.7%]
+> Python [13.4%]
+> CSS [5.1%]
+> Html [1.2%]
 
 📷 *Instagram:* ${sig}
 🐈 *Github:* ${sgh}
 🥏 *Whatsapp* wa.me/${nomorown}
-🌐 *Discord:* ✖️
-🌏 *Website:* https://zaky.websites.co.in/
-🎶 *Tiktok:* ✖️
 
 `
   let teks = ' '
@@ -57,17 +43,14 @@ const sections = [
    {
 	title: `${htjava} OWNER –––––––––·•`,
 	rows: [
-	    {title: "📱 • Kontak Zaky", rowId: ".hacker"},
+	    {title: "📱 • Owner Zaky", rowId: ".hacker"},
 	{title: "🎨 • Biodata", rowId: ".owner bio"},
-	{title: "🌐 • Website", rowId: ".website"},
 	{title: "🌎 • Script", rowId: ".sc"},
-	{title: "👤 • Nama", rowId: ".nameown"},
-	{title: "🏮 • record by zaky", rowId: ".owner nomor"},
 	]
     },{
 	title: `${htjava} SUPPORT ME –––––––·•`,
 	rows: [
-	    {title: "💹 • Donasi", rowId: ".donasi"},
+	    {title: "💹 • Donasi", rowId: ".owner nomor"},
 	{title: "🔖 • Sewa", rowId: ".sewa"},
 	{title: "🌟 • Buy Premium", rowId: ".premium"},
 	]
@@ -78,7 +61,7 @@ const listMessage = {
   text: teks,
   footer: null,
   title: `${htki} *OWNER* ${htka}`,
-  buttonText: "Click Here ⎙",
+  buttonText: "Click Here !",
   sections
 }
 
@@ -90,7 +73,7 @@ const listMessage = {
           conn.reply(m.chat, teksnomor, m, { contextInfo: { mentionedJid: [nowner] }})
             break
             case 'bio':
-          conn.sendHydrated(m.chat, teksbio, wm, ppown, "https://wa.me/" + nomorown, "💬 ᴄʜᴀᴛs", null,null, [["ᴅᴏɴᴀsɪ", '.donasi'], [null, null],[null,null]], m)
+          conn.sendHydrated(m.chat, teksbio, wm, ppown, "wa.me/" + nomorown, "💬 ᴄʜᴀᴛs", null,null, [["ᴅᴏɴᴀsɪ", '.donasi'], [null, null],[null,null]], m)
             break
             
           default:
