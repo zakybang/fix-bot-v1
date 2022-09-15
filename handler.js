@@ -661,51 +661,51 @@ export async function handler(chatUpdate) {
  * Handle groups participants update
  * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate 
  */
-export async function participantsUpdate({ id, participants, action }) {
-    if (opts['self'])
-        return
-    // if (id in conn.chats) return // First login will spam
-    if (this.isInit)
-        return
-    if (global.db.data == null)
-        await loadDatabase()
-    let chat = global.db.data.chats[id] || {}
-    let text = ''
-    switch (action) {
-        case 'add':
-        case 'remove':
-            if (chat.welcome) {
-                let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
-                for (let user of participants) {
-                    let pp = 'https://telegra.ph/file/2d06f0936842064f6b3bb.png'
-                    try {
-                        pp = await this.profilePictureUrl(user, 'image')
-                    } catch (e) {
-                    } finally {
-                        text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
-                            (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', `${this.getName(user)}`)
-                        let wel = API('males', '/welcome2', {
+async participantsUpdate({ id, participants, action }) {
+        if (opts['self']) return
+        // if (id in conn.chats) return // First login will spam
+        if (global.isInit) return
+        let chat = global.db.data.chats[id] || {}
+        let text = ''
+        switch (action) {
+            case 'add':
+            case 'remove':
+                if (chat.welcome) {
+                    let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
+                    for (let user of participants) {
+                        let pp = 'https://telegra.ph/file/2d06f0936842064f6b3bb.png'
+                        try {
+                            pp = await this.profilePictureUrl(user, 'image')
+                        } catch (e) {
+
+                        } finally {
+                            text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc ? String.fromCharCode(8206).repeat(4001) + groupMetadata.desc : '') :
+                                (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace(/@user/g, '@' + user.split`@`[0])
+                            let wel = API('hardianto', '/api/welcome3', {
                                 profile: pp,
-                                username: await this.getName(user),
-                                background: 'https://telegra.ph/file/0b814069d86ee9a022da5.jpg',
-                                groupname: await this.getName(id),
-                                membercount: groupMetadata.participants.length
+                                name: await this.getName(user),
+                                bg: 'https://telegra.ph/file/a36809ab7862a77d18ac0.jpg',
+                                namegb: await this.getName(id),
+                                member: groupMetadata.participants.length
                             })
-                            let lea = API('males', '/goodbye3', {
+                            let lea = API('hardianto', '/api/goodbye3', {
                                 profile: pp,
-                                username: await this.getName(user),
-                                background: 'https://telegra.ph/file/0db212539fe8a014017e3.jpg',
-                                groupname: await this.getName(id),
-                                membercount: groupMetadata.participants.length
+                                name: await this.getName(user),
+                                bg: 'https://telegra.ph/file/a36809ab7862a77d18ac0.jpg',
+                                namegb: await this.getName(id),
+                                member: groupMetadata.participants.length
                             })
-    conn.sendButtonDoc(id, text, wm, action == 'add' ? 'ᴡᴇʟᴄᴏᴍᴇ👋' : 'sᴀʏᴏɴᴀʀᴀᴀ👋', action === 'add' ? '.intro' : 'WHMODSDEV', fkontak, { contextInfo: { externalAdReply: { showAdAttribution: true,
-    mediaUrl: "https://youtube.com/channel/UCgnsm5vkY2wlRJnpD9I-7SQ",
-    mediaType: 2, 
-    description: "https://youtube.com/channel/UCgnsm5vkY2wlRJnpD9I-7SQ", 
-    title: 'ZBotz-MD',
+                            /*await this.send3TemplateButtonImg(id, action === 'add' ? wel : lea, text, wm, action === 'add' ? 'selamat datang' : 'sampai jumpa', action === 'add' ? '.intro' : 'FokusID')*/
+   await conn.sendButtonDoc(id, text, wm, action == 'add' ? 'selamat datang👋' : 'sampai jumpa👋', action === 'add' ? '.intro' : 'ZAKY', fkontak,{
+  contextInfo: {mentionedJid: [user],
+    externalAdReply :{
+    mediaUrl: snh,
+    mediaType: 2,
+    description: sdc , 
+    title: titlebot,
     body: wm,
     thumbnail: await(await fetch(action === 'add' ? wel : lea)).buffer(),
-    sourceUrl: snh
+    sourceUrl: sgc
      }}
   })
 /*this.sendHydrated(id, text, '➞' + await this.getName(id), await (await fetch((action == 'add' ? wel : lea))).buffer(), sgc, (action == 'add' ? '💌 WELCOME' : '🐾 BYE'), user.split`@`[0], '🌹 USER', [
