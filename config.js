@@ -30,7 +30,7 @@ let wibh = moment.tz('Asia/Jakarta').format('HH')
 /*============== SOCIAL ==============*/
 
 // kalo ga punya ketik "-" atau biarin aja biar ada creditsnya :v
-global.sig = 'https://instagram.com/_ctzhid'
+global.sig = 'https://instagram.com/_hackeer'
 global.sgh = '-' //github
 global.sgc = 'https://chat.whatsapp.com/Iu9I1k8FnXW1sXT41XIF50' //group whatsapp
 global.sdc = '-' //discord
@@ -57,11 +57,9 @@ global.lolkey = '8e66d0934cf741bfd2182c16' // PUNYA WAHID 357d3c85079c4e0818731e
 
 
 /*============== STAFF ==============*/
-global.owner = [
-  ['6281365255567', 'ZAKY', true],
-  ['6281365255567', 'OWNER', true],
-  ['6281365255567', 'OWNER', true],
-  ['6281269883200', 'BOT', true] //Ganti jd nomormu sama Namamu
+global.kontak2 = [
+        ['6281365255567', 'ZAKy', 'Creator Bot', 'ZakY@support.com', true],
+        ['6281269883200', 'ZBotz-MD', 'Bot WhatsApp', 'Just Bot', true] //Ganti jd nomormu sama Namamu
   // [number, dia creator/owner?, dia developer?]
 ] // Put your number here
 global.mods = [] // Want some help?
