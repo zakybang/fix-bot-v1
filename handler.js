@@ -5,7 +5,6 @@ import path, { join } from 'path'
 import { unwatchFile, watchFile } from 'fs'
 import chalk from 'chalk'
 import fs from 'fs'
-import fetch from 'node-fetch'
 
 /**
  * @type {import('@adiwajshing/baileys')}
@@ -46,11 +45,9 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.exp))
                     user.exp = 0
                 if (!isNumber(user.limit))
-                    user.limit = 100
+                    user.limit = 10
                 if (!isNumber(user.lastclaim))
                     user.lastclaim = 0
-                if (!isNumber(user.pasangan))
-                    user.pasangan = ''
                 if (!('registered' in user))
                     user.registered = false
                 if (!user.registered) {
@@ -86,6 +83,8 @@ export async function handler(chatUpdate) {
                     user.bank = 0
                 if (!isNumber(user.health))
                     user.health = 100
+                if (!isNumber(user.limit))
+                    user.limit = 0
                 if (!isNumber(user.potion))
                     user.potion = 0
                 if (!isNumber(user.trash))
@@ -190,8 +189,6 @@ export async function handler(chatUpdate) {
                     user.lastmonthly = 0
                 if (!isNumber(user.lastbunga))
                     user.lastbunga = 0
-                if (!isNumber(user.note))
-                    user.note = 0
                     
                 if (!isNumber(user.premium))
                     user.premium = false
@@ -202,11 +199,10 @@ export async function handler(chatUpdate) {
             } else
                 global.db.data.users[m.sender] = {
                     exp: 0,
-                    limit: 100,
+                    limit: 10,
                     lastclaim: 0,
                     registered: false,
                     name: m.name,
-                    pasangan: '',
                     age: -1,
                     regTime: -1,
                     afk: -1,
@@ -222,6 +218,7 @@ export async function handler(chatUpdate) {
                     atm: 0,
                     fullatm: 0,
                     health: 100,
+                    limit: 100,
                     potion: 10,
                     trash: 0,
                     wood: 0,
@@ -274,7 +271,6 @@ export async function handler(chatUpdate) {
                     lastweekly: 0,
                     lastmonthly: 0,
                     lastbunga: 0,
-                    note: 0,
                     
                     premium: false,
                     premiumTime: 0,
@@ -287,7 +283,7 @@ export async function handler(chatUpdate) {
                 if (!('isBanned' in chat))
                     chat.isBanned = false
                 if (!('welcome' in chat))
-                    chat.welcome = true
+                    chat.welcome = false
                 if (!('detect' in chat))
                     chat.detect = false
                 if (!('sWelcome' in chat))
@@ -308,16 +304,12 @@ export async function handler(chatUpdate) {
                     chat.antiToxic = false
                 if (!('simi' in chat))
                     chat.simi = false
-                if (!('nsfw' in chat))
-                    chat.nsfw = false
-                if (!('premnsfw' in chat))
-                    chat.premnsfw = false
                 if (!isNumber(chat.expired))
                     chat.expired = 0
             } else
                 global.db.data.chats[m.chat] = {
                     isBanned: false,
-                    welcome: true,
+                    welcome: false,
                     detect: false,
                     sWelcome: '',
                     sBye: '',
@@ -329,8 +321,6 @@ export async function handler(chatUpdate) {
                     antiToxic: true,
                     simi: false,
                     expired: 0,
-                    nsfw: false,
-                    premnsfw: false,
                 }
             let settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
@@ -338,13 +328,11 @@ export async function handler(chatUpdate) {
                 if (!('self' in settings)) settings.self = false
                 if (!('autoread' in settings)) settings.autoread = true
                 if (!('restrict' in settings)) settings.restrict = true
-                if (!('jadibot' in settings)) settings.jadibot = false
                 if (!('autorestart' in settings)) settings.autorestart = true
                 if (!('restartDB' in settings)) settings.restartDB = 0
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
                 autoread: true,
-                jadibot: false,
                 restrict: true,
                 autorestart: true,
                 restartDB: 0
@@ -537,7 +525,7 @@ export async function handler(chatUpdate) {
                 else
                     m.exp += xp
                 if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-                    this.reply(m.chat, `[❗] Limit kau abis dek, beli melalui *${usedPrefix}buy limit*`, m)
+                    this.reply(m.chat, `[❗] Limit anda habis, silahkan beli melalui *${usedPrefix}buy limit*`, m)
                     continue // Limit habis
                 }
                 if (plugin.level > _user.level) {
@@ -597,7 +585,7 @@ export async function handler(chatUpdate) {
                         }
                     }
                     if (m.limit)
-                        m.reply(+m.limit + ' ʟɪᴍɪᴛ ᴛᴇʀᴘᴀᴋᴀɪ ✔️')
+                        m.reply(+m.limit + ' Limit terpakai ✔️')
                 }
                 break
             }
@@ -677,42 +665,19 @@ export async function participantsUpdate({ id, participants, action }) {
             if (chat.welcome) {
                 let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
                 for (let user of participants) {
-                    let pp = 'https://telegra.ph/file/2d06f0936842064f6b3bb.png'
+                    let pp = './src/avatar_contact.png'
                     try {
                         pp = await this.profilePictureUrl(user, 'image')
                     } catch (e) {
                     } finally {
                         text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
-                            (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', `${this.getName(user)}`)
-                        let wel = API('males', '/welcome2', {
-                                profile: pp,
-                                username: await this.getName(user),
-                                background: 'https://telegra.ph/file/0b814069d86ee9a022da5.jpg',
-                                groupname: await this.getName(id),
-                                membercount: groupMetadata.participants.length
-                            })
-                            let lea = API('males', '/goodbye3', {
-                                profile: pp,
-                                username: await this.getName(user),
-                                background: 'https://telegra.ph/file/0db212539fe8a014017e3.jpg',
-                                groupname: await this.getName(id),
-                                membercount: groupMetadata.participants.length
-                            })
-    conn.sendButtonDoc(id, text, wm, action == 'add' ? 'ᴡᴇʟᴄᴏᴍᴇ👋' : 'sᴀʏᴏɴᴀʀᴀᴀ👋', action === 'add' ? '.intro' : 'WHMODSDEV', fkontak, { contextInfo: { externalAdReply: { showAdAttribution: true,
-    mediaUrl: "https://youtube.com/channel/UCgnsm5vkY2wlRJnpD9I-7SQ",
-    mediaType: 2, 
-    description: "https://youtube.com/channel/UCgnsm5vkY2wlRJnpD9I-7SQ", 
-    title: 'ZBotz-MD',
-    body: wm,
-    thumbnail: await(await fetch(action === 'add' ? wel : lea)).buffer(),
-    sourceUrl: snh
-     }}
-  })
-/*this.sendHydrated(id, text, '➞' + await this.getName(id), await (await fetch((action == 'add' ? wel : lea))).buffer(), sgc, (action == 'add' ? '💌 WELCOME' : '🐾 BYE'), user.split`@`[0], '🌹 USER', [
-      ['ᴍᴇɴᴜ', '/menu'],
-      [(action == 'add' ? '\n\nYAELAH BEBAN GROUP NAMBAH 1 :(' : '\n\nBYE BEBAN! :)'), '...'],
+                            (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', await this.getName(user))
+                        //this.sendFile(id, pp, 'pp.jpg', text, null, false, { mentions: [user] })
+    this.sendHydrated(id, text, wm + '\n\n' + botdate, pp, sgc, (action == 'add' ? '💌 welcome' : 'sayonara'), user.split`@`[0], 'USER', [
+      ['MENU ', '/menu'],
+      ['\n\nSAYA PEDO DAN SAYA BANGGA (≧▽≦)', '...'],
       [null, null]
-    ], null, false, { mentions: [user] }) */
+    ], null, false, { mentions: [user] })
                     }
                 }
             }
@@ -776,22 +741,26 @@ Untuk mematikan fitur ini, ketik
 
 global.dfail = (type, m, conn) => {
     let msg = {
-        rowner: '*ᴏɴʟʏ ᴅᴇᴠᴇʟᴏᴘᴇʀ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ ᴅᴇᴠᴇʟᴏᴘᴇʀ ʙᴏᴛ',
-        owner: '*ᴏɴʟʏ ᴏᴡɴᴇʀ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ ᴏᴡɴᴇʀ ʙᴏᴛ',
-        mods: '*ᴏɴʟʏ ᴍᴏᴅᴇʀᴀᴛᴏʀ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ ᴍᴏᴅᴇʀᴀᴛᴏʀ ʙᴏᴛ',
-        premium: '*ᴏɴʟʏ ᴘʀᴇᴍɪᴜᴍ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀ',
-        group: '*ɢʀᴏᴜᴘ ᴄʜᴀᴛ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ʙɪsᴀ ᴅɪᴘᴀᴋᴀɪ ᴅɪᴅᴀʟᴀᴍ ɢʀᴏᴜᴘ',
-        private: '*ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ʙɪsᴀ ᴅɪᴘᴀᴋᴀɪ ᴅɪᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ',
-        admin: '*ᴏɴʟʏ ᴀᴅᴍɪɴ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ',
-        botAdmin: '*ᴏɴʟʏ ʙᴏᴛ ᴀᴅᴍɪɴ* • ᴄᴏᴍᴍᴀɴᴅ ɪɴɪ ʜᴀɴʏᴀ ʙɪsᴀ ᴅɪɢᴜɴᴀᴋᴀɴ ᴋᴇᴛɪᴋᴀ ʙᴏᴛ ᴍᴇɴᴊᴀᴅɪ ᴀᴅᴍɪɴ',
-        restrict: '*ʀᴇsᴛʀɪᴄᴛ* • ʀᴇsᴛʀɪᴄᴛ ʙᴇʟᴜᴍ ᴅɪɴʏᴀʟᴀᴋᴀɴ ᴅɪᴄʜᴀᴛ ɪɴɪ',
+        rowner: '[ ❗ ] Only Developer',
+        owner: '[ ❗ ] Only Owner',
+        mods: '[ ❗ ] Only Moderator',
+        premium: '[ ❗ ] Only Premium Users',
+        group: '[ ❗ ] Only Group Chat',
+        private: '[ ❗ ] Only Private Chat',
+        admin: '[ ❗ ] Only Admin Group',
+        botAdmin: '[ ❗ ] Only Bot Admin',
+        restrict: '[ ❗ ] This Fitur Disable'
     }[type]
     if (msg) return conn.reply(m.chat, msg, m, { contextInfo: { externalAdReply: {title: global.wm, body: '404 Access denied ✘', sourceUrl: global.snh, thumbnail: fs.readFileSync('./thumbnail.jpg') }}})
     
     let msgg = {
-    	unreg: 'ʜᴀʟʟᴏ ᴋᴀᴋ 👋\nᴀɴᴅᴀ ʜᴀʀᴜs ᴍᴇɴᴅᴀғᴛᴀʀ ᴋᴇ ᴅᴀᴛᴀʙᴀsᴇ ʙᴏᴛ ᴅᴜʟᴜ sᴇʙᴇʟᴜᴍ ᴍᴇɴɢɢᴜɴᴀᴋᴀɴ ғɪᴛᴜʀ ɪɴɪ\n\n➞ ᴋʟɪᴄᴋ ᴛᴏᴍʙᴏʟ ᴅɪʙᴀᴡᴀʜ ᴜɴᴛᴜᴋ ᴍᴇɴᴅᴀғᴛᴀʀ ᴋᴇ ᴅᴀᴛᴀʙᴀsᴇ ʙᴏᴛ'
+    	unreg: 'Halo kak ! 👋\nAnda belum terdaftar didalam Database BOT 🗂️\n\nKlick Tombol dibawah Untuk Mendaftar Ke Database BOT !'
 }[type]
-if (msgg) return conn.sendButton(m.chat, `${global.htki} VERIFY ${global.htka}`, msgg, null, ['- ᴠᴇʀɪғʏ -', '/verify'],m)
+if (msgg) return conn.sendHydrated(m.chat, msgg, global.wm, null, global.sgc, '🌎 Join My Group Official', `${m.sender.split`@`[0]}`, '🌹 U S E R', [
+      ['▣ VERIFY ▣', '/daftar'],
+      [null,null],
+      [null, null]
+    ], m)
 }
 
 let file = global.__filename(import.meta.url, true)
